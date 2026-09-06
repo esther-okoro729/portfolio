@@ -86,14 +86,6 @@ The website is designed to:
 
 ### 📦 Dependencies
 
-```json
-{
-  "dependencies": {
-    "gsap": "^3.12.5",
-    "lenis": "^1.1.13",
-    "font-awesome": "^6.5.0"
-  }
-}
 🎨 Color Palette
 Role	Color Code	Usage
 Primary Wine	#7B0323	Buttons, accents, links
