@@ -232,122 +232,105 @@ function animateMetrics() {
 animateMetrics();
 
 // =============================================
-// TESTIMONIAL CAROUSEL
+// TESTIMONIAL CAROUSEL - WORK SAMPLE STYLE (SEAMLESS LOOP)
 // =============================================
 const track = document.getElementById('testimonialTrack');
-const dotsContainer = document.getElementById('testimonialDots');
 const prevBtn = document.getElementById('testimonialPrev');
 const nextBtn = document.getElementById('testimonialNext');
 
-let currentIndex = 0;
-let totalSlides = 0;
-let slidesPerView = 1;
-let autoSlideInterval = null;
-const autoSlideDelay = 4500;
+let testimonialAnimation = null;
 
-function getSlidesPerView() {
-    if (window.innerWidth >= 992) return 3;
-    if (window.innerWidth >= 768) return 2;
-    return 1;
-}
-
-function updateCarousel() {
-    slidesPerView = getSlidesPerView();
-    const cards = track.querySelectorAll('.testimonial-card');
-    totalSlides = cards.length;
-
-    if (currentIndex > totalSlides - slidesPerView) {
-        currentIndex = Math.max(0, totalSlides - slidesPerView);
+function initTestimonialCarousel() {
+    if (testimonialAnimation) {
+        gsap.killTweensOf(track);
     }
 
-    const cardWidth = cards[0]?.offsetWidth || 0;
-    const gap = 24;
-    const slideWidth = cardWidth + gap;
-    const offset = currentIndex * slideWidth;
-
-    gsap.to(track, {
-        x: -offset,
-        duration: 0.6,
-        ease: 'power3.out',
-    });
-
-    const dots = dotsContainer.querySelectorAll('.dot');
-    const totalDots = Math.ceil(totalSlides / slidesPerView);
-    dots.forEach((dot, idx) => {
-        dot.classList.toggle('active', idx === currentIndex);
-    });
-}
-
-function createDots() {
     const cards = track.querySelectorAll('.testimonial-card');
-    totalSlides = cards.length;
-    const totalDots = Math.ceil(totalSlides / getSlidesPerView());
+    const totalWidth = track.scrollWidth / 2;
 
-    dotsContainer.innerHTML = '';
-    for (let i = 0; i < totalDots; i++) {
-        const dot = document.createElement('button');
-        dot.className = `dot ${i === 0 ? 'active' : ''}`;
-        dot.setAttribute('aria-label', `Go to testimonial ${i + 1}`);
-        dot.dataset.index = i;
-        dot.addEventListener('click', () => {
-            currentIndex = i;
-            updateCarousel();
-            resetAutoSlide();
+    gsap.set(track, { x: 0 });
+
+    // SEAMLESS CONTINUOUS ANIMATION - Exactly like work samples
+    testimonialAnimation = gsap.to(track, {
+        x: -totalWidth,
+        duration: 45, // Slightly slower for better readability
+        ease: 'none',
+        repeat: -1,
+        // NO modifiers - smooth continuous loop!
+    });
+
+    const wrapper = track.closest('.testimonial-carousel-wrapper');
+    if (wrapper) {
+        wrapper.addEventListener('mouseenter', () => {
+            if (testimonialAnimation) testimonialAnimation.pause();
         });
-        dotsContainer.appendChild(dot);
+        wrapper.addEventListener('mouseleave', () => {
+            if (testimonialAnimation) testimonialAnimation.resume();
+        });
     }
 }
 
-function goToSlide(index) {
-    const totalDots = Math.ceil(totalSlides / getSlidesPerView());
-    if (index < 0) index = totalDots - 1;
-    if (index >= totalDots) index = 0;
-    currentIndex = index;
-    updateCarousel();
-}
+document.addEventListener('DOMContentLoaded', initTestimonialCarousel);
 
-function nextSlide() { goToSlide(currentIndex + 1); }
-function prevSlide() { goToSlide(currentIndex - 1); }
-
-function startAutoSlide() {
-    if (autoSlideInterval) clearInterval(autoSlideInterval);
-    autoSlideInterval = setInterval(nextSlide, autoSlideDelay);
-}
-
-function resetAutoSlide() {
-    if (autoSlideInterval) {
-        clearInterval(autoSlideInterval);
-        startAutoSlide();
-    }
-}
-
-function initCarousel() {
-    createDots();
-    currentIndex = 0;
-    updateCarousel();
-    startAutoSlide();
-}
-
-let resizeTimeout;
+let testimonialResizeTimeout;
 window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-        const newSlidesPerView = getSlidesPerView();
-        if (newSlidesPerView !== slidesPerView) {
-            createDots();
-            currentIndex = 0;
-            updateCarousel();
-            resetAutoSlide();
-        } else {
-            updateCarousel();
+    clearTimeout(testimonialResizeTimeout);
+    testimonialResizeTimeout = setTimeout(() => {
+        if (testimonialAnimation) {
+            gsap.killTweensOf(track);
+            initTestimonialCarousel();
         }
-    }, 200);
+    }, 300);
 });
 
-if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetAutoSlide(); });
-if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetAutoSlide(); });
+// Previous/Next buttons for testimonial carousel
+if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+        const cardWidth = track.querySelector('.testimonial-card')?.offsetWidth || 0;
+        const gap = 24;
+        const slideWidth = cardWidth + gap;
+        const totalWidth = track.scrollWidth / 2;
+        let currentX = parseFloat(track._gsap?.x || 0);
 
-document.addEventListener('DOMContentLoaded', initCarousel);
+        if (currentX >= 0) {
+            gsap.set(track, { x: -totalWidth });
+        }
+
+        gsap.to(track, {
+            x: `+=${slideWidth}`,
+            duration: 0.6,
+            ease: 'power2.out',
+        });
+        if (testimonialAnimation) testimonialAnimation.pause();
+        setTimeout(() => {
+            if (testimonialAnimation) testimonialAnimation.resume();
+        }, 3000);
+    });
+}
+
+if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+        const cardWidth = track.querySelector('.testimonial-card')?.offsetWidth || 0;
+        const gap = 24;
+        const slideWidth = cardWidth + gap;
+        const totalWidth = track.scrollWidth / 2;
+        let currentX = parseFloat(track._gsap?.x || 0);
+
+        if (currentX <= -totalWidth * 1.5) {
+            gsap.set(track, { x: 0 });
+        }
+
+        gsap.to(track, {
+            x: `-=${slideWidth}`,
+            duration: 0.6,
+            ease: 'power2.out',
+        });
+        if (testimonialAnimation) testimonialAnimation.pause();
+        setTimeout(() => {
+            if (testimonialAnimation) testimonialAnimation.resume();
+        }, 3000);
+    });
+}
 
 // =============================================
 // CERTIFICATIONS CAROUSEL - SEAMLESS LOOP
@@ -642,7 +625,7 @@ console.log('🔄 Hero Layout: Content LEFT | Image RIGHT');
 console.log('📸 Certifications: COMPACT BOXES - Two separate pills, no empty space');
 console.log('🏆 Awards: Gold text on dark background for award titles');
 console.log('🔄 Credentials Carousel: SEAMLESS LOOP - No sharp jump!');
-console.log('📋 Testimonials: 17 total (3 new added)');
+console.log('📋 Testimonials: 18 total (NEW: Oluebube added)');
+console.log('🔄 Testimonial Carousel: WORK SAMPLE STYLE - Continuous auto-scroll, 9 duplicates, all 18 show seamlessly!');
 console.log('🛠️ Tools: Performance & Engagement removed, HR Analytics updated');
 console.log('📈 Metrics: Staff Recruited 1000+, Staff Supervised 800+, Customer Service 80%');
-console.log('💬 Testimonials: Fixed empty space - cards now fit content height');
