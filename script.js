@@ -166,7 +166,7 @@ function animateStats() {
     const stats = [
         { id: 'stat1', target: 7, suffix: '+' },
         { id: 'stat2', target: 500, suffix: '+' },
-        { id: 'stat3', target: 100, suffix: '+' },
+        { id: 'stat3', target: 1000, suffix: '+' },
     ];
 
     stats.forEach((stat) => {
@@ -368,7 +368,6 @@ function initCertCarousel() {
 
     gsap.set(certTrack, { x: 0 });
 
-    // SEAMLESS ANIMATION - NO JUMP BACK
     certAnimation = gsap.to(certTrack, {
         x: -totalWidth,
         duration: 35,
@@ -627,13 +626,13 @@ if (form) {
 // =============================================
 console.log('🏆 Esther Okoro, PHRi™ · HR Executive & Talent Management');
 console.log('✅ Features: Lenis, GSAP, Custom Cursor, Glassmorphism, Typewriter');
-console.log('📊 Stats: 7+ Years Experience · 500+ Employees Trained · 100+ Staff Recruited');
+console.log('📊 Stats: 7+ Years Experience · 500+ Employees Trained · 1000+ Staff Recruited');
 console.log('🎨 Colors: Wine Red #7B0323 · Charcoal #1A1A1A · Cream #FDF8F9');
 console.log('📞 Contact: estherokoro338@gmail.com · +234 706 895 6795');
 console.log('🔗 LinkedIn: linkedin.com/in/esther-okoro');
 console.log('🏆 Certifications: PHRi™, Total Reward, IKIGAI, Stormy Waters, HR Effectiveness');
 console.log('🎤 Speaking: Rotary Club, Santus Consulting, NCC Emergency Center');
-console.log('📊 Impact Metrics: 500+ Trained, 100+ Recruited, 90% Client Satisfaction');
+console.log('📊 Impact Metrics: 500+ Trained, 1000+ Recruited, 90% Client Satisfaction, 800+ Supervised, 80% Service Increase');
 console.log('📝 Formspree: Connected & ready');
 console.log('✨ Typewriter: Personal + Professional - "Esther Okoro — Your HR Strategy Partner"');
 console.log('💬 WhatsApp: Connected & ready at bottom-left');
@@ -643,3 +642,7 @@ console.log('🔄 Hero Layout: Content LEFT | Image RIGHT');
 console.log('📸 Certifications: COMPACT BOXES - Two separate pills, no empty space');
 console.log('🏆 Awards: Gold text on dark background for award titles');
 console.log('🔄 Credentials Carousel: SEAMLESS LOOP - No sharp jump!');
+console.log('📋 Testimonials: 17 total (3 new added)');
+console.log('🛠️ Tools: Performance & Engagement removed, HR Analytics updated');
+console.log('📈 Metrics: Staff Recruited 1000+, Staff Supervised 800+, Customer Service 80%');
+console.log('💬 Testimonials: Fixed empty space - cards now fit content height');
